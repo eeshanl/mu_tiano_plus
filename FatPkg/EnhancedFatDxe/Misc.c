@@ -336,6 +336,7 @@ FatDiskIo (
       // Access cache
       //
       Status = FatAccessCache (Volume, CACHE_TYPE (IoMode), RAW_ACCESS (IoMode), Offset, BufferSize, Buffer, Task);
+      DEBUG ((DEBUG_ERROR, "FatDiskIo: FatAccessCache %r\n", Status));
     } else {
       //
       // Access disk directly
@@ -347,6 +348,7 @@ FatDiskIo (
         DiskIo     = Volume->DiskIo;
         IoFunction = (IoMode == ReadDisk) ? DiskIo->ReadDisk : DiskIo->WriteDisk;
         Status     = IoFunction (DiskIo, Volume->MediaId, Offset, BufferSize, Buffer);
+        DEBUG ((DEBUG_ERROR, "FatDiskIo: IoFunction %r\n", Status));
       } else {
         //
         // Non-blocking access
@@ -368,6 +370,7 @@ FatDiskIo (
                                        Subtask,
                                        &Subtask->DiskIo2Token.Event
                                        );
+          DEBUG ((DEBUG_ERROR, "FatDiskIo: CreateEvent %r\n", Status));
           if (!EFI_ERROR (Status)) {
             InsertTailList (&Task->Subtasks, &Subtask->Link);
           } else {
